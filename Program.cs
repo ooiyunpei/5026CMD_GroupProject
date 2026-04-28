@@ -1,10 +1,14 @@
 using _5026CMD_GroupProject.Components;
+using _5026CMD_GroupProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Add this before builder.Build()
+builder.Services.AddScoped<DatabaseService>();
 
 var app = builder.Build();
 
