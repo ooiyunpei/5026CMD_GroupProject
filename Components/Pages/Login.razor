@@ -1,0 +1,70 @@
+﻿@page "/login"
+@rendermode InteractiveServer
+@layout LoginLayout
+@using _5026CMD_GroupProject.Services
+@inject DatabaseService DB
+@inject NavigationManager Nav
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <!-- Logo Area -->
+        <div class="text-center mb-4">
+            <img src="images/INTI_Logo.png" alt="INTI Logo" style="width: 200px;" />
+        </div>
+
+        <h2 class="welcome-text">Welcome Back!</h2>
+
+        <div class="form-group mt-4">
+            <input type="text" class="custom-input" placeholder="userid@gmail.com" @bind="username" />
+        </div>
+
+        <div class="form-group mt-3">
+            <input type="password" class="custom-input" placeholder="Password" @bind="password" />
+        </div>
+
+        <div class="text-end mt-2">
+            <small>Forgot password? <a href="#">Click Here</a></small>
+        </div>
+
+        <button class="btn-login mt-4" @onclick="HandleLogin">Login</button>
+
+        <div class="text-center mt-4">
+            <small>Don't have an account? <a href="#">Contact Admin</a></small>
+        </div>
+    </div>
+    
+    <!-- Bottom Left Brand -->
+    <div class="brand-footer">
+        <h1>UniTrack</h1>
+        <p>UniTrack (Malaysia) Sdn Bhd. All Rights Reserved.</p>
+    </div>
+</div>
+
+@code {
+    private string username = "";
+    private string password = "";
+    private string errorMessage = "";
+
+    private async Task HandleLogin()
+    {
+        errorMessage = "Attempting to log in...";
+        StateHasChanged();
+
+        try
+        {
+            var user = await DB.ValidateLogin(username, password);
+            if (user != null)
+            {
+                Nav.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Invalid username or password.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error: " + ex.Message;
+        }
+    }
+}
